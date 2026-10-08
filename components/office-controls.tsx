@@ -19,9 +19,11 @@ export default function OfficeControls() {
   async function applyTheme(next: ThemeKey) {
     setTheme(next)
     const selected = themes[next]
-    window.parent.document.documentElement.style.setProperty('--office-accent', selected.accent)
-    window.parent.document.documentElement.style.setProperty('--office-bg', selected.background)
-    window.postMessage({ type: 'delux-office-theme', theme: next, colors: selected }, '*')
+    // The preview can render this app inside a cross-origin iframe. Keep the
+    // local document authoritative and use postMessage for an optional host.
+    document.documentElement.style.setProperty('--office-accent', selected.accent)
+    document.documentElement.style.setProperty('--office-bg', selected.background)
+    window.parent.postMessage({ type: 'delux-office-theme', theme: next, colors: selected }, '*')
     setStatus('Saving…')
     const result = await createOfficeActivity(`Office theme changed to ${selected.label}`)
     setStatus(result.ok ? 'Saved' : 'Saved locally')
