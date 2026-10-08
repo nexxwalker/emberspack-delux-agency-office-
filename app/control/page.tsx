@@ -4,7 +4,7 @@ import { OperationsConsole } from '@/components/operations-console'
 export const dynamic = 'force-dynamic'
 
 export default async function ControlPage() {
-  let data = { approvals: [], tasks: [] }
+  let data: Awaited<ReturnType<typeof listOperations>> = { approvals: [], tasks: [], activity: [], metrics: [] }
   try {
     data = await listOperations()
   } catch {

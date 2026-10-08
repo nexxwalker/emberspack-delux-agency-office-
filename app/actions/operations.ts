@@ -4,28 +4,51 @@ import { desc, eq } from 'drizzle-orm'
 import { requireDb } from '@/lib/db'
 import { activity, approvals, metrics, tasks } from '@/lib/db/schema'
 
+const emptyOperations = { tasks: [], approvals: [], activity: [], metrics: [] }
+
+function isMissingTable(error: unknown) {
+  return typeof error === 'object' && error !== null && 'code' in error && error.code === '42P01'
+}
+
 export async function listOperations() {
-  const db = requireDb()
-  const [taskRows, approvalRows, activityRows, metricRows] = await Promise.all([
-    db.select().from(tasks).orderBy(desc(tasks.createdAt)).limit(50),
-    db.select().from(approvals).orderBy(desc(approvals.createdAt)).limit(20),
-    db.select().from(activity).orderBy(desc(activity.createdAt)).limit(30),
-    db.select().from(metrics).orderBy(desc(metrics.capturedAt)).limit(20),
-  ])
-  return { tasks: taskRows, approvals: approvalRows, activity: activityRows, metrics: metricRows }
+  try {
+    const db = requireDb()
+    const [taskRows, approvalRows, activityRows, metricRows] = await Promise.all([
+      db.select().from(tasks).orderBy(desc(tasks.createdAt)).limit(50),
+      db.select().from(approvals).orderBy(desc(approvals.createdAt)).limit(20),
+      db.select().from(activity).orderBy(desc(activity.createdAt)).limit(30),
+      db.select().from(metrics).orderBy(desc(metrics.capturedAt)).limit(20),
+    ])
+    return { tasks: taskRows, approvals: approvalRows, activity: activityRows, metrics: metricRows }
+  } catch (error) {
+    if (isMissingTable(error)) return emptyOperations
+    throw error
+  }
 }
 
 export async function updateApproval(id: string, status: 'approved' | 'rejected') {
-  const db = requireDb()
-  await db.update(approvals).set({ status }).where(eq(approvals.id, id))
-  await db.insert(activity).values({ id: crypto.randomUUID(), message: `Approval ${status}: ${id}`, department: 'brain', kind: 'approval' })
-  return { ok: true }
+  try {
+    const db = requireDb()
+    await db.update(approvals).set({ status }).where(eq(approvals.id, id))
+    await db.insert(activity).values({ id: crypto.randomUUID(), message: `Approval ${status}: ${id}`, department: 'brain', kind: 'approval' })
+    return { ok: true as const }
+  } catch (error) {
+    if (isMissingTable(error)) return { ok: false as const, error: 'Operations storage is not initialized yet.' }
+    throw error
+  }
 }
 
 export async function createTask(input: { title: string; department: string; priority?: string }) {
-  const db = requireDb()
-  const task = { id: crypto.randomUUID(), title: input.title.trim(), department: input.department, priority: input.priority ?? 'normal', status: 'queued' }
-  await db.insert(tasks).values(task)
-  await db.insert(activity).values({ id: crypto.randomUUID(), message: `Task queued: ${task.title}`, department: task.department, kind: 'task' })
-  return task
+  const title = input.title.trim()
+  if (!title || title.length > 200) return { ok: false as const, error: 'Enter a task title under 200 characters.' }
+  try {
+    const db = requireDb()
+    const task = { id: crypto.randomUUID(), title, department: input.department, priority: input.priority ?? 'normal', status: 'queued' }
+    await db.insert(tasks).values(task)
+    await db.insert(activity).values({ id: crypto.randomUUID(), message: `Task queued: ${task.title}`, department: task.department, kind: 'task' })
+    return { ok: true as const, task }
+  } catch (error) {
+    if (isMissingTable(error)) return { ok: false as const, error: 'Operations storage is not initialized yet.' }
+    throw error
+  }
 }

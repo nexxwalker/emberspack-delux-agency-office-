@@ -15,7 +15,8 @@ export function OperationsConsole({ approvals, tasks }: { approvals: Approval[];
 
   function decide(id: string, status: 'approved' | 'rejected') {
     startTransition(async () => {
-      await updateApproval(id, status)
+      const result = await updateApproval(id, status)
+      if (!result.ok) return
       setItems((rows) => rows.map((row) => row.id === id ? { ...row, status } : row))
     })
   }
@@ -23,8 +24,9 @@ export function OperationsConsole({ approvals, tasks }: { approvals: Approval[];
   function addTask() {
     if (!title.trim()) return
     startTransition(async () => {
-      const task = await createTask({ title, department: 'ops' })
-      setTaskRows((rows) => [task, ...rows])
+      const result = await createTask({ title, department: 'ops' })
+      if (!result.ok) return
+      setTaskRows((rows) => [result.task, ...rows])
       setTitle('')
     })
   }
