@@ -165,3 +165,31 @@
     @apply bg-background text-foreground;
   }
 }
+
+.control-page { min-height: 100vh; background: #f7f7f2; color: #151414; padding: clamp(24px, 5vw, 72px); }
+.ops-console { max-width: 1180px; margin: 0 auto; }
+.ops-console__header { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 32px; }
+.eyebrow { margin: 0 0 10px; color: #5a5a5a; font-size: 11px; font-weight: 700; letter-spacing: .18em; }
+.ops-console h1 { margin: 0; font-size: clamp(32px, 5vw, 62px); line-height: .95; letter-spacing: -.06em; font-weight: 600; max-width: 650px; }
+.live-pill { display: inline-flex; align-items: center; gap: 7px; border: 1px solid rgba(21,20,20,.14); border-radius: 999px; padding: 8px 12px; color: #2e866d; background: #e9f6ef; font-size: 11px; font-weight: 700; letter-spacing: .12em; }
+.ops-console__grid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(280px, .75fr); gap: 18px; }
+.console-card { background: #fff; border: 1px solid rgba(21,20,20,.12); border-radius: 18px; padding: 22px; box-shadow: 0 18px 50px rgba(21,20,20,.06); }
+.console-card__title { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; font-size: 14px; font-weight: 700; }
+.console-card__title strong { color: #c46060; font-size: 12px; }
+.approval-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 0; border-top: 1px solid rgba(21,20,20,.1); }
+.approval-row strong, .approval-row small { display: block; }
+.approval-row strong { font-size: 14px; font-weight: 600; }
+.approval-row small { margin-top: 5px; color: #5a5a5a; font-size: 12px; }
+.row-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.row-actions button { display: grid; place-items: center; size: 34px; width: 34px; height: 34px; border: 1px solid rgba(21,20,20,.14); border-radius: 50%; background: #fdfff8; cursor: pointer; }
+.row-actions button:first-child { color: #2e9070; }
+.row-actions button:last-child { color: #c46060; }
+.status-label { color: #5a5a5a; font-size: 12px; text-transform: capitalize; }
+.task-create { display: flex; gap: 8px; }
+.task-create input { min-width: 0; flex: 1; border: 1px solid rgba(21,20,20,.15); border-radius: 10px; padding: 12px; background: #fdfff8; outline: none; }
+.task-create button { border: 0; border-radius: 10px; padding: 0 14px; background: #151414; color: #fff; cursor: pointer; }
+.mini-list { display: flex; flex-direction: column; gap: 12px; margin-top: 22px; }
+.mini-list div { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; }
+.mini-list small { color: #5a5a5a; text-transform: uppercase; letter-spacing: .08em; }
+.empty-copy { color: #5a5a5a; font-size: 13px; line-height: 1.5; }
+@media (max-width: 760px) { .ops-console__header { align-items: flex-start; flex-direction: column; } .ops-console__grid { grid-template-columns: 1fr; } .approval-row { align-items: flex-start; flex-direction: column; } }
