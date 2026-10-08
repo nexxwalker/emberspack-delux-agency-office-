@@ -13,7 +13,7 @@ export function LandingPage() {
   return (
     <main className="landing-page landing-page--dark">
       <nav className="landing-nav" aria-label="Primary navigation">
-        <Link href="/" className="landing-brand"><span className="landing-brand__mark">Ember<br />Spark</span><span>Delux crew</span></Link>
+        <Link href="/" className="landing-brand"><img src="/delux-crew-logo.png" alt="Delux Crew powered by Ember Spark" className="platform-logo platform-logo--nav" /><span>Delux crew</span></Link>
         <div className="landing-nav__links">
           <a href="#experience">The experience</a><a href="#connections">Connections</a><a href="#experience">Explore the office ↗</a><Link href="/settings">Sign in</Link><Link href="/office" className="landing-nav__launch">Get started ↗</Link>
         </div>
