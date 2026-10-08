@@ -38,6 +38,19 @@ export async function updateApproval(id: string, status: 'approved' | 'rejected'
   }
 }
 
+export async function createOfficeActivity(message: string) {
+  const safeMessage = message.trim().slice(0, 200)
+  if (!safeMessage) return { ok: false as const }
+  try {
+    const db = requireDb()
+    await db.insert(activity).values({ id: crypto.randomUUID(), message: safeMessage, department: 'brain', kind: 'office' })
+    return { ok: true as const }
+  } catch (error) {
+    if (isMissingTable(error)) return { ok: false as const }
+    throw error
+  }
+}
+
 export async function createTask(input: { title: string; department: string; priority?: string }) {
   const title = input.title.trim()
   if (!title || title.length > 200) return { ok: false as const, error: 'Enter a task title under 200 characters.' }
