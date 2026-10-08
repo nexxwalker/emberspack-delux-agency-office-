@@ -196,12 +196,19 @@
 
   @layer base {
 
-  html, body { min-height: 100%; margin: 0; }
-  * {
+  html, body {
+    min-height: 100%;
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  *, *::before, *::after {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
+  }
+  button, input, select, textarea {
+    font: inherit;
   }
 }
 
