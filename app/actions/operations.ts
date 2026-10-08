@@ -6,8 +6,14 @@ import { activity, approvals, metrics, tasks } from '@/lib/db/schema'
 
 const emptyOperations = { tasks: [], approvals: [], activity: [], metrics: [] }
 
-function isMissingTable(error: unknown) {
-  return typeof error === 'object' && error !== null && 'code' in error && error.code === '42P01'
+function isMissingTable(error: unknown): boolean {
+  if (!error || typeof error !== 'object') return false
+
+  const candidate = error as { code?: unknown; message?: unknown; cause?: unknown }
+  if (candidate.code === '42P01') return true
+  if (typeof candidate.message === 'string' && /relation .* does not exist/i.test(candidate.message)) return true
+
+  return candidate.cause ? isMissingTable(candidate.cause) : false
 }
 
 export async function listOperations() {
