@@ -1,19 +1,11 @@
 import type { Metadata } from 'next'
+import LandingPage from '@/components/landing-page'
 
 export const metadata: Metadata = {
-  title: 'Delux crew v3 (Beta)',
-  description: 'A 3D isometric office where AI agents do real work.',
+  title: 'Delux crew — Your company, thinking together',
+  description: 'A living command centre for the people, agents, and systems that move your work forward.',
 }
 
 export default function Page() {
-  return (
-    <main className="delux-frame">
-      <iframe
-        title="Delux crew command centre"
-        src="/office.html"
-        className="delux-frame__embed"
-        allow="clipboard-read; clipboard-write"
-      />
-    </main>
-  )
+  return <LandingPage />
 }
