@@ -10,5 +10,5 @@ export default async function ControlPage() {
   } catch {
     // The connected Neon schema is provisioned separately through the Neon SQL MCP.
   }
-  return <main className="control-page"><OperationsConsole approvals={data.approvals} tasks={data.tasks} /></main>
+  return <main className="platform-page control-page"><OperationsConsole approvals={data.approvals} tasks={data.tasks} /></main>
 }
